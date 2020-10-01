@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>JS Audio Player</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.rawgit.com/download/polymer-cdn/1.5.0/lib/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous" />
+
+    <style media="screen">
+
+        .jquery-trackswitch a,
+        .jquery-trackswitch abbr,
+        .jquery-trackswitch acronym,
+        .jquery-trackswitch address,
+        .jquery-trackswitch applet,
+        .jquery-trackswitch article,
+        .jquery-trackswitch aside,
+        .jquery-trackswitch audio,
+        .jquery-trackswitch b,
+        .jquery-trackswitch big,
+        .jquery-trackswitch blockquote,
+        .jquery-trackswitch canvas,
+        .jquery-trackswitch caption,
+        .jquery-trackswitch center,
+        .jquery-trackswitch cite,
+        .jquery-trackswitch code,
+        .jquery-trackswitch dd,
+        .jquery-trackswitch del,
+        .jquery-trackswitch details,
+        .jquery-trackswitch dfn,
+        .jquery-trackswitch div,
+        .jquery-trackswitch dl,
+        .jquery-trackswitch dt,
+        .jquery-trackswitch em,
+        .jquery-trackswitch embed,
+        .jquery-trackswitch fieldset,
+        .jquery-trackswitch figcaption,
+        .jquery-trackswitch figure,
+        .jquery-trackswitch footer,
+        .jquery-trackswitch form,
+        .jquery-trackswitch h1,
+        .jquery-trackswitch h2,
+        .jquery-trackswitch h3,
+        .jquery-trackswitch h4,
+        .jquery-trackswitch h5,
+        .jquery-trackswitch h6,
+        .jquery-trackswitch header,
+        .jquery-trackswitch hgroup,
+        .jquery-trackswitch i,
+        .jquery-trackswitch iframe,
+        .jquery-trackswitch img,
+        .jquery-trackswitch ins,
+        .jquery-trackswitch kbd,
+        .jquery-trackswitch label,
+        .jquery-trackswitch legend,
+        .jquery-trackswitch li,
+        .jquery-trackswitch mark,
+        .jquery-trackswitch menu,
+        .jquery-trackswitch nav,
+        .jquery-trackswitch object,
+        .jquery-trackswitch ol,
+        .jquery-trackswitch output,
+        .jquery-trackswitch p,
+        .jquery-trackswitch pre,
+        .jquery-trackswitch q,
+        .jquery-trackswitch ruby,
+        .jquery-trackswitch s,
+        .jquery-trackswitch samp,
+        .jquery-trackswitch section,
+        .jquery-trackswitch small,
+        .jquery-trackswitch span,
+        .jquery-trackswitch strike,
+        .jquery-trackswitch strong,
+        .jquery-trackswitch sub,
+        .jquery-trackswitch summary,
+        .jquery-trackswitch sup,
+        .jquery-trackswitch table,
+        .jquery-trackswitch tbody,
+        .jquery-trackswitch td,
+        .jquery-trackswitch tfoot,
+        .jquery-trackswitch th,
+        .jquery-trackswitch thead,
+        .jquery-trackswitch time,
+        .jquery-trackswitch tr,
+        .jquery-trackswitch tt,
+        .jquery-trackswitch u,
+        .jquery-trackswitch ul,
+        .jquery-trackswitch var,
+        .jquery-trackswitch video {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 100%;
+            font: inherit;
+            vertical-align: baseline;
+        }
+
+        .jquery-trackswitch article,
+        .jquery-trackswitch aside,
+        .jquery-trackswitch details,
+        .jquery-trackswitch figcaption,
+        .jquery-trackswitch figure,
+        .jquery-trackswitch footer,
+        .jquery-trackswitch header,
+        .jquery-trackswitch hgroup,
+        .jquery-trackswitch menu,
+        .jquery-trackswitch nav,
+        .jquery-trackswitch section {
+            display: block;
+        }
+
+        .jquery-trackswitch ol,
+        .jquery-trackswitch ul {
+            list-style: none;
+        }
+
+        .jquery-trackswitch blockquote,
+        .jquery-trackswitch q {
+            quotes: none;
+        }
+
+        .jquery-trackswitch blockquote:after,
+        .jquery-trackswitch blockquote:before,
+        .jquery-trackswitch q:after,
+        .jquery-trackswitch q:before {
+            content: "";
+            content: none;
+        }
+
+        .jquery-trackswitch table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        *,
+        :after,
+        :before {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .jquery-trackswitch {
+            background: #eee;
+            position: relative;
+            margin: 0px;
+            overflow: hidden;
+            color: #000;
+            line-height: 1;
+        }
+
+        .jquery-trackswitch ts-track {
+            display: none;
+        }
+
+        .jquery-trackswitch ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        .jquery-trackswitch li {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .jquery-trackswitch .control li.button:after,
+        .jquery-trackswitch .overlay span:after,
+        .jquery-trackswitch li.track.error:before {
+            content: "";
+            display: block;
+            font-family: FontAwesome;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 1;
+            text-indent: 0;
+        }
+
+        .jquery-trackswitch .overlay {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 10;
+        }
+
+        .jquery-trackswitch .overlay #overlayinfo span.info,
+        .jquery-trackswitch .overlay>p,
+        .jquery-trackswitch .overlay>span {
+            display: block;
+            position: absolute;
+            text-align: center;
+        }
+
+        .jquery-trackswitch .overlay>span {
+            background-color: #f1c40f;
+            width: 50px;
+            height: 50px;
+            top: calc(50% - 25px);
+            left: calc(50% - 25px);
+            text-indent: -9999px;
+            line-height: 0;
+            border-radius: 100%;
+            cursor: pointer;
+        }
+
+        .jquery-trackswitch .overlay>span.loading {
+            cursor: inherit;
+        }
+
+        .jquery-trackswitch .overlay>span:after {
+            content: "\f011";
+            padding-top: 7px;
+            font-size: 28pt;
+        }
+
+        .jquery-trackswitch .overlay>span.loading:after {
+            content: "\f110";
+        }
+
+        .jquery-trackswitch.error .overlay {
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .jquery-trackswitch.error .overlay>span {
+            background: #c03328;
+            cursor: inherit;
+        }
+
+        .jquery-trackswitch.error .overlay>span:after {
+            content: "\f12a";
+        }
+
+        .jquery-trackswitch.error .overlay p {
+            width: 100%;
+            top: calc(50% + 35px);
+            color: #fff;
+        }
+
+        .jquery-trackswitch .overlay #overlayinfo {
+            height: 40px;
+            width: 100%;
+            bottom: 5px;
+            right: 10px;
+            color: #ed8c01;
+            color: #000;
+            text-align: right;
+            font-size: 14pt;
+        }
+
+        .jquery-trackswitch .overlay #overlayinfo span.info {
+            bottom: 0;
+            right: 0;
+            width: 380px;
+            cursor: pointer;
+            text-indent: -9999px;
+            opacity: 0.4;
+            display: none;
+        }
+
+        .jquery-trackswitch .overlay #overlayinfo span.info:after {
+            content: "\f05a";
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            font-size: 16pt;
+        }
+
+        .jquery-trackswitch .overlay #overlayinfo span.text {
+            display: none;
+            position: absolute;
+            right: 0;
+        }
+
+        .jquery-trackswitch .overlay #overlayinfo span.text strong {
+            font-weight: 700;
+        }
+
+        .jquery-trackswitch .overlay #overlayinfo a {
+            color: #eee;
+            text-decoration: underline;
+        }
+
+        .jquery-trackswitch .main-control ul {
+            background-color: #2e2e2d;
+            height: auto;
+            min-height: 80px;
+            padding: 4px 0px;
+            overflow: hidden;
+            color: #ffffff;
+            margin-left: -5px;
+        }
+
+        .jquery-trackswitch .main-control .button {
+            float: left;
+            width: 15px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .jquery-trackswitch .main-control .timing {
+            float: right;
+            font-family: monospace;
+            margin: 7px 0 0 10px;
+        }
+
+        .jquery-trackswitch .main-control .seekwrap {
+            overflow: hidden;
+            height: 28px;
+            cursor: pointer;
+        }
+
+        .jquery-trackswitch .main-control .seekwrap .seekbar {
+            background-color: #ed8c01;
+            height: 6px;
+            margin: 11px 4px 0 0;
+            position: relative;
+            -webkit-box-shadow: 4px 0 0 0 #ed8c01;
+            -moz-box-shadow: 4px 0 0 0 #ed8c01;
+            box-shadow: 4px 0 0 0 #ed8c01;
+        }
+
+        .jquery-trackswitch .main-control .seekwrap .seekbar .seekhead {
+            background-color: #ed8c01;
+            position: absolute;
+            width: 4px;
+            height: 22px;
+            top: -8px;
+            left: 0;
+        }
+
+        .jquery-trackswitch>p {
+            margin: 12px 10px;
+        }
+
+        .jquery-trackswitch img {
+            max-width: 100%;
+            display: block;
+            margin: 0;
+            padding: 0;
+        }
+
+        .jquery-trackswitch .seekable-img-wrap {
+            display: inline-block;
+            position: relative;
+        }
+
+        .jquery-trackswitch .seekable-img-wrap .seekwrap {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            cursor: pointer;
+        }
+
+        .jquery-trackswitch .seekable-img-wrap .seekwrap .seekhead {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            border-left: 2px solid #000;
+            border-right: 2px solid #fff;
+        }
+
+        .jquery-trackswitch ul.track_list {
+            padding: 0;
+            font-size: 10px;
+        }
+
+        .jquery-trackswitch li.track {
+            background-color: #ddd;
+            position: relative;
+            min-height: 32px;
+            padding: 8px 10px 8px 60px;
+        }
+
+        .jquery-trackswitch li.track.tabs {
+            display: inline-block;
+            padding-right: 12px;
+            border: 1px solid #999;
+        }
+
+        .jquery-trackswitch li.track:not(.tabs):nth-child(even) {
+            background-color: #eee;
+            padding-right: 36px;
+            margin-left: 5px;
+        }
+
+        .jquery-trackswitch li.track.error {
+            background-color: #dd9b9b !important;
+        }
+
+        .jquery-trackswitch li.track.error:before {
+            content: "\f071  ERROR";
+            display: inline;
+            padding-right: 10px;
+            color: #7c2525;
+            cursor: inherit;
+        }
+
+        .jquery-trackswitch li.track ul.control {
+            position: absolute;
+            top: calc(50% - 13px);
+            left: 52px;
+            padding-left: 0px;
+        }
+
+        .jquery-trackswitch li.track ul.control li {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            text-align: center;
+        }
+
+        .jquery-trackswitch .control li.button {
+            position: relative;
+            text-indent: -9999px;
+            line-height: 0;
+            cursor: pointer;
+        }
+
+        .jquery-trackswitch .control li.button:after {
+            position: absolute;
+        }
+
+        .jquery-trackswitch .control li.playpause:after {
+            content: "\f04b";
+            left: 25px;
+            top: 25px;
+        }
+
+        .jquery-trackswitch .control li.playpause.checked:after {
+            content: "\f04c";
+        }
+
+        .jquery-trackswitch .control li.stop:after {
+            content: "\f04d";
+            font-size: 12px;
+            top: 25px;
+        }
+
+        .jquery-trackswitch .control li.repeat:after {
+            content: "\f01e";
+            opacity: 0.5;
+        }
+
+        .jquery-trackswitch .control li.repeat.checked:after {
+            opacity: 1;
+        }
+
+        .jquery-trackswitch .control li.mute:after {
+            content: "\f028";
+            position: absolute;
+            bottom: 50%;
+            left: 4px;
+            display: none;
+        }
+
+        .jquery-trackswitch .control li.mute.checked:after {
+            content: "\f026";
+        }
+
+        .jquery-trackswitch .control li.solo:after {
+            content: "\f10c";
+            position: absolute;
+            bottom: 50%;
+            left: 4px;
+        }
+
+        .jquery-trackswitch .control li.solo.checked:after {
+            content: "\f05d";
+        }
+
+        .jquery-trackswitch .control li.solo.radio {
+            margin: 0;
+        }
+
+        .jquery-trackswitch .control li.solo.radio.checked:after {
+            content: "\f192";
+        }
+
+
+
+
+        .player.jquery-trackswitch {
+            width: 277px;
+            left: 7px;
+            top: 0px;
+            margin: 0px;
+            float: left;
+        }
+
+        li.stop.button {
+            background-color: #1e1e1e;
+            padding: 31px 15px;
+            color: #fff;
+            box-shadow: 0 0 10px #1e1f20;
+        }
+
+        li.playpause.button {
+            background-color: #1e1e1e;
+            padding: 31px;
+            color: #fff;
+            box-shadow: 0 0 10px #1e1f20;
+        }
+
+        .control li.playpause:after {
+            left: 25px;
+            top: 20px;
+            right: 8px;
+        }
+
+        .control li.stop:after {
+            top: 24px;
+            left: 10px;
+        }
+
+        .track_list {
+            top: 43px;
+            left: 117px;
+            position: absolute;
+            font-size: 10px;
+        }
+
+        .jquery-trackswitch li.track {
+            background-color: #1e1e1e !important;
+            position: relative;
+            min-height: 21px;
+            padding: 6px 13px 4px 8px;
+            color: #fff;
+            margin-top: 2px;
+            float: left;
+        }
+
+        .solo {
+            top: 4px;
+            color: #a718ae;
+        }
+
+        li.track.solo {
+            padding-right: 26px;
+            border-left: 3px solid #ffffff;
+        }
+
+        li.title {
+            padding: 5px 30px 0px 0px;
+            float: left;
+            background-color: #1e1e1e !important;
+            margin-left: 9px;
+            position: relative;
+            margin-top: 5px;
+            box-shadow: 0 0 10px #1e1f20;
+        }
+
+        img.jsicon {
+            width: 20px;
+            float: left;
+            margin: 5px;
+            position: relative;
+            top: -3px;
+        }
+
+        div#player {
+            float: left;
+            background-color: #2e2e2d;
+            width: 291px;
+            height: 132px;
+        }
+
+        p.tname {
+            width: 130px;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        img.seekable {
+            background: #1e1e1e;
+            border-width: 1px;
+            border-style: solid;
+            border-image: linear-gradient(to right, #FB7300, rgb(255 255 255 / 0%)) 1 10%;
+        }
+
+        li.solo.button.radio {
+            color: #ffffff;
+        }
+
+        li.solo.button.radio.checked {
+            color: #FB7300;
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+
+
+    <div id="player">
+        <div class="player">
+            <img class="seekable" data-seek-margin-left="4" data-seek-margin-right="4" src="mix.png" />
+            <ts-track title="BEFORE"
+                data-img="https://static.wixstatic.com/media/2a5dd0_0135f57580b441c59eaea9770c1b9655~mv2.png">
+                <ts-source src="https://static.wixstatic.com/mp3/2a5dd0_435b52f7f9834bf68b65bc966ce2ca32.mp3"
+                    type="audio/mpeg">
+                </ts-source>
+            </ts-track>
+            <ts-track title="AFTER"
+                data-img="https://static.wixstatic.com/media/2a5dd0_f9d0914945f744cfb0d7d33259a6a6f7~mv2.png">
+                <ts-source src="https://static.wixstatic.com/mp3/2a5dd0_139e0410fd684837a8b0b55637ee333f.mp3"
+                    type="audio/mpeg">
+                </ts-source>
+            </ts-track>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
+        <script>
+            if ("undefined" == typeof jQuery)
+              throw new Error(
+                "trackswitchjs's JavaScript requires jQuery. jQuery must be included before trackswitchjs's JavaScript."
+              );
+            +(function (a) {
+              var b = a.fn.jquery.split(" ")[0].split(".");
+              if (
+                (b[0] < 2 && b[1] < 9) ||
+                (1 == b[0] && 9 == b[1] && b[2] < 1) ||
+                b[0] >= 4
+              )
+                throw new Error(
+                  "trackswitchjs's JavaScript requires at least jQuery v1.9.1 but less than v4.0.0"
+                );
+            })(jQuery),
+              (function () {
+                function a(a, e) {
+                  (this.element = $(a)),
+                    (this.options = $.extend({}, d, e)),
+                    this.options.mute ||
+                    this.options.solo ||
+                    (console.error(
+                      "Cannot disable both solo and mute, reactivating solo"
+                    ),
+                      (this.options.solo = !0)),
+                    this.options.onlyradiosolo &&
+                    ((this.options.mute = !1), (this.options.radiosolo = !0)),
+                    (this._defaults = d),
+                    (this._name = c),
+                    (this.numberOfTracks = 0),
+                    (this.longestDuration = 0),
+                    (this.playing = !1),
+                    (this.repeat = this.options.repeat),
+                    this.startTime,
+                    (this.position = 0),
+                    this.timerUpdateUI,
+                    (this.currentlySeeking = !1),
+                    this.seekingElement,
+                    (this.trackProperties = Array()),
+                    (this.trackSources = Array()),
+                    (this.trackGainNode = Array()),
+                    (this.trackBuffer = Array()),
+                    (this.activeAudioSources = Array()),
+                    b &&
+                    ((this.gainNodeMaster = b.createGain()),
+                      (this.gainNodeMaster.gain.value = 0),
+                      this.gainNodeMaster.connect(b.destination)),
+                    this.init();
+                }
+                var b = (function () {
+                  return "undefined" != typeof AudioContext
+                    ? new AudioContext()
+                    : "undefined" != typeof webkitAudioContext
+                      ? new webkitAudioContext()
+                      : "undefined" != typeof mozAudioContext
+                        ? new mozAudioContext()
+                        : null;
+                })(),
+                  c =
+                    (document.registerElement("ts-track"),
+                      document.registerElement("ts-source"),
+                      "trackSwitch"),
+                  d = {
+                    mute: !0,
+                    solo: !0,
+                    globalsolo: !0,
+                    repeat: !1,
+                    radiosolo: !1,
+                    onlyradiosolo: !1,
+                    spacebar: !1,
+                    tabview: !1,
+                  };
+                (a.prototype.init = function () {
+                  var a = this;
+                  this.element.addClass("jquery-trackswitch"),
+                    0 === this.element.find(".main-control").length &&
+                    this.element.prepend(
+                      '<div class="overlay"><span class="activate">Activate</span><p id="overlaytext"></p><p id="overlayinfo"><span class="info">Info</span><span class="text"><strong>trackswitch.js</strong> - open source multitrack audio player<br /><a href="https://github.com/audiolabs/trackswitch.js">https://github.com/audiolabs/trackswitch.js</a></span></p></div><div class="main-control"><ul class="control"><li class="stop button">Stop</li><li class="playpause button">Play</li><li class="title"><img class="jsicon" src="https://static.wixstatic.com/media/2a5dd0_22bf2b34d1f444c8937697a304bdac55~mv2.png"><p class="tname">Tech House</p></li><li class="seekwrap"><div class="seekbar"><div class="seekhead"></div></div></li></ul></div>'
+                    ),
+                    this.element.find(".seekable:not(.seekable-img-wrap > .seekable)")
+                      .length > 0 && this.element.find(".main-control .seekwrap").hide(),
+                    this.element
+                      .find(".seekable:not(.seekable-img-wrap > .seekable)")
+                      .each(function () {
+                        (a.originalImage = this.src),
+                          $(this).wrap(
+                            '<div class="seekable-img-wrap" style="' +
+                            $(this).data("style") +
+                            '; display: block;"></div>'
+                          ),
+                          $(this).after(
+                            '<div class="seekwrap" style=" left: ' +
+                            ($(this).data("seekMarginLeft") || 0) +
+                            "%; right: " +
+                            ($(this).data("seekMarginRight") || 0) +
+                            '%;"><div class="seekhead"></div></div>'
+                          );
+                      }),
+                    this.element.on(
+                      "touchstart mousedown",
+                      ".overlay .activate",
+                      $.proxy(this.load, this)
+                    ),
+                    this.element.on(
+                      "touchstart mousedown",
+                      ".overlay #overlayinfo .info",
+                      $.proxy(function () {
+                        this.element.find(".overlay .info").hide(),
+                          this.element.find(".overlay .text").show();
+                      }, this)
+                    ),
+                    this.element.one("loaded", $.proxy(this.loaded, this)),
+                    this.element.one("errored", $.proxy(this.errored, this));
+                  var c = $('<ul class="track_list"></ul>');
+                  if (
+                    ((this.numberOfTracks = this.element.find("ts-track").length),
+                      this.numberOfTracks > 0)
+                  ) {
+                    if (
+                      (this.element.find("ts-track").each(function (b) {
+                        a.trackProperties[b] = {
+                          mute: !1,
+                          solo: !1,
+                          success: !1,
+                          error: !1,
+                        };
+                        var d = a.options.tabview ? " tabs" : "",
+                          e = a.options.radiosolo ? " radio" : "",
+                          f = a.options.onlyradiosolo ? " solo" : "";
+                        c.append(
+                          '<li class="track' +
+                          d +
+                          f +
+                          '" style="' +
+                          ($(this).attr("style") || "") +
+                          '">' +
+                          ($(this).attr("title") || "Track " + (b + 1)) +
+                          '<ul class="control">' +
+                          (a.options.solo
+                            ? '<li class="solo button' + e + '" title="Solo">Solo</li>'
+                            : "") +
+                          "</ul></li>"
+                        );
+                      }),
+                        this.element.append(c),
+                        this.options.radiosolo &&
+                        ((this.trackProperties[0].solo = !0),
+                          this.apply_track_properties()),
+                        this.updateMainControls(),
+                        !b)
+                    )
+                      return (
+                        this.element.trigger("errored"),
+                        this.element
+                          .find("#overlaytext")
+                          .html(
+                            "Web Audio API is not supported in your browser. Please consider upgrading."
+                          ),
+                        !1
+                      );
+                  } else this.element.trigger("errored");
+                }),
+                  (a.prototype.destroy = function () {
+                    this.element.find(".main-control").remove(),
+                      this.element.find(".tracks").remove(),
+                      this.element.removeData();
+                  }),
+                  (a.prototype.sourceFailed = function (a, b, c) {
+                    void 0 !== this.trackSources[a][b + 1]
+                      ? this.prepareRequest(a, b + 1)
+                      : ((this.trackProperties[a].error = !0), this.trackStatusChanged());
+                  }),
+                  (a.prototype.decodeAudio = function (a, c, d) {
+                    var e = this,
+                      f = a.response;
+                    b.decodeAudioData(
+                      f,
+                      function (a) {
+                        (e.trackGainNode[c] = b.createGain()),
+                          e.trackGainNode[c].connect(e.gainNodeMaster),
+                          (e.trackBuffer[c] = b.createBufferSource()),
+                          (e.trackBuffer[c].buffer = a),
+                          (e.trackProperties[c].success = !0),
+                          e.trackStatusChanged();
+                      },
+                      function (a) {
+                        e.sourceFailed(c, d, "Error Decoding File Type");
+                      }
+                    );
+                  }),
+                  (a.prototype.makeRequest = function (a, b) {
+                    var c = this,
+                      d = $(this.trackSources[a][b]).attr("src"),
+                      e = new XMLHttpRequest();
+                    e.open("GET", d, !0),
+                      (e.responseType = "arraybuffer"),
+                      (e.onreadystatechange = function () {
+                        4 === e.readyState &&
+                          (200 === e.status
+                            ? c.decodeAudio(e, a, b)
+                            : c.sourceFailed(a, b, "404 - File Not Found"));
+                      }),
+                      e.send();
+                  }),
+                  (a.prototype.prepareRequest = function (a, b) {
+                    void 0 !== this.trackSources[a][b]
+                      ? this.makeRequest(a, b)
+                      : this.sourceFailed(a, b, "No Source Found");
+                  }),
+                  (a.prototype.load = function (a) {
+                    if (!this.valid_click(a)) return !0;
+                    a.preventDefault();
+                    var b = this;
+                    if (
+                      (this.element
+                        .find(".overlay span.activate")
+                        .addClass("fa-spin loading"),
+                        this.numberOfTracks > 0)
+                    ) {
+                      var c = document.createElement("audio"),
+                        d = {
+                          ".aac": "audio/aac;",
+                          ".aif": "audio/aiff;",
+                          ".aiff": "audio/aiff;",
+                          ".au": "audio/basic;",
+                          ".mp1": "audio/mpeg;",
+                          ".mp2": "audio/mpeg;",
+                          ".mp3": "audio/mpeg;",
+                          ".mpg": "audio/mpeg;",
+                          ".mpeg": "audio/mpeg;",
+                          ".m4a": "audio/mp4;",
+                          ".mp4": "audio/mp4;",
+                          ".oga": "audio/ogg;",
+                          ".ogg": "audio/ogg;",
+                          ".wav": "audio/wav;",
+                          ".webm": "audio/webm;",
+                        };
+                      this.element.find("ts-track").each(function (a) {
+                        b.trackSources[a] = $(this).find("ts-source");
+                        for (var e = 0; e < b.trackSources[a].length; e++) {
+                          if (void 0 !== $(b.trackSources[a][e]).attr("type"))
+                            var f = $(b.trackSources[a][e]).attr("type") + ";";
+                          else {
+                            var g = $(b.trackSources[a][e])
+                              .attr("src")
+                              .substring(
+                                $(b.trackSources[a][e]).attr("src").lastIndexOf(".")
+                              );
+                            console.log(g);
+                            var f = void 0 !== d[g] ? d[g] : "audio/" + g.substr(1) + ";";
+                          }
+                          (c.canPlayType && c.canPlayType(f).replace(/no/, "")) ||
+                            b.trackSources[a].splice(e, 1);
+                        }
+                      });
+                    }
+                    for (var e = 0; e < this.trackSources.length; e++)
+                      this.prepareRequest(e, 0);
+                    return a.stopPropagation(), !1;
+                  }),
+                  (a.prototype.findLongest = function () {
+                    for (var a = 0; a < this.numberOfTracks; a++) {
+                      var b = this.trackBuffer[a].buffer.duration;
+                      b > this.longestDuration && (this.longestDuration = b);
+                    }
+                    this.element.trigger("loaded");
+                  }),
+                  (a.prototype.trackStatusChanged = function () {
+                    var a = 0,
+                      b = 0;
+                    this.trackProperties.forEach(function (c) {
+                      (a += c.success || c.error ? 1 : 0), (b += c.error ? 1 : 0);
+                    }),
+                      a === this.numberOfTracks &&
+                      (0 === b
+                        ? this.findLongest()
+                        : (this.element.trigger("errored"),
+                          this.element
+                            .find("#overlaytext")
+                            .html("One or more audio files failed to load.")));
+                  }),
+                  (a.prototype.loaded = function () {
+                    this.element.find(".overlay").removeClass("loading"),
+                      this.element.find(".overlay").hide().remove(),
+                      $(this.element).find(".timing .time").html("00:00:00:000"),
+                      $(this.element)
+                        .find(".timing .length")
+                        .html(this.secondsToHHMMSSmmm(this.longestDuration)),
+                      this.apply_track_properties(),
+                      this.bindEvents();
+                  }),
+                  (a.prototype.errored = function () {
+                    this.element.find(".overlay span").removeClass("fa-spin loading"),
+                      this.element.addClass("error");
+                    var a = this;
+                    this.trackProperties.forEach(function (b, c) {
+                      b.error &&
+                        $(a.element)
+                          .find(".track_list > li:nth-child(" + (c + 1) + ")")
+                          .addClass("error");
+                    }),
+                      this.unbindEvents();
+                  }),
+                  (a.prototype.unbindEvents = function () {
+                    this.element.off("touchstart mousedown", ".overlay span"),
+                      this.element.off("loaded"),
+                      this.element.off("touchstart mousedown", ".playpause"),
+                      this.element.off("touchstart mousedown", ".stop"),
+                      this.element.off("touchstart mousedown", ".repeat"),
+                      this.element.off("mousedown touchstart", ".seekwrap"),
+                      this.element.off("mousemove touchmove"),
+                      this.element.off("mouseup touchend"),
+                      this.element.off("touchstart mousedown", ".mute"),
+                      this.element.off("touchstart mousedown", ".solo"),
+                      this.options.spacebar && $(window).unbind("keypress");
+                  }),
+                  (a.prototype.bindEvents = function () {
+                    if (
+                      (this.element.on(
+                        "touchstart mousedown",
+                        ".playpause",
+                        $.proxy(this.event_playpause, this)
+                      ),
+                        this.element.on(
+                          "touchstart mousedown",
+                          ".stop",
+                          $.proxy(this.event_stop, this)
+                        ),
+                        this.element.on(
+                          "touchstart mousedown",
+                          ".repeat",
+                          $.proxy(this.event_repeat, this)
+                        ),
+                        this.element.on(
+                          "mousedown touchstart",
+                          ".seekwrap",
+                          $.proxy(this.event_seekStart, this)
+                        ),
+                        this.element.on(
+                          "mousemove touchmove",
+                          $.proxy(this.event_seekMove, this)
+                        ),
+                        this.element.on(
+                          "mouseup touchend",
+                          $.proxy(this.event_seekEnd, this)
+                        ),
+                        this.element.on(
+                          "touchstart mousedown",
+                          ".mute",
+                          $.proxy(this.event_mute, this)
+                        ),
+                        this.element.on(
+                          "touchstart mousedown",
+                          ".solo",
+                          $.proxy(this.event_solo, this)
+                        ),
+                        this.options.spacebar)
+                    ) {
+                      var a = this;
+                      $(window).unbind("keypress"),
+                        $(window).keypress(function (b) {
+                          32 === b.which && a.event_playpause(b);
+                        });
+                    }
+                  }),
+                  (a.prototype.valid_click = function (a) {
+                    return (
+                      "touchstart" === a.type || ("mousedown" === a.type && 1 === a.which)
+                    );
+                  }),
+                  (a.prototype.secondsToHHMMSSmmm = function (a) {
+                    var b = parseInt(a / 3600) % 24;
+                    b = b < 10 ? "0" + b : b;
+                    var c = parseInt(a / 60) % 60;
+                    c = c < 10 ? "0" + c : c;
+                    var d = a % 60;
+                    (d = d.toString().split(".")[0]), (d = d < 10 ? "0" + d : d);
+                    var e = Math.round((a % 1) * 1e3);
+                    return (
+                      (e = e < 10 ? "00" + e : e < 100 ? "0" + e : e),
+                      b + ":" + c + ":" + d + ":" + e
+                    );
+                  }),
+                  (a.prototype.updateMainControls = function () {
+                    this.element.find(".playpause").toggleClass("checked", this.playing),
+                      this.element.find(".repeat").toggleClass("checked", this.repeat);
+                    var a = (this.position / this.longestDuration) * 100;
+                    this.element.find(".seekhead").each(function () {
+                      $(this).css({ left: a + "%" });
+                    }),
+                      0 !== this.longestDuration &&
+                      $(this.element)
+                        .find(".timing .time")
+                        .html(this.secondsToHHMMSSmmm(this.position));
+                  }),
+                  (a.prototype.monitorPosition = function (a) {
+                    (a.position =
+                      a.playing && !a.currentlySeeking
+                        ? b.currentTime - a.startTime
+                        : a.position),
+                      a.position >= a.longestDuration &&
+                      !a.currentlySeeking &&
+                      ((a.position = 0),
+                        a.stopAudio(),
+                        a.repeat ? a.startAudio(a.position) : (a.playing = !1)),
+                      a.updateMainControls();
+                  }),
+                  (a.prototype.stopAudio = function () {
+                    var a = b.currentTime;
+                    this.gainNodeMaster.gain.cancelScheduledValues(a),
+                      this.gainNodeMaster.gain.setValueAtTime(1, a),
+                      this.gainNodeMaster.gain.linearRampToValueAtTime(0, a + 0.03);
+                    for (var c = 0; c < this.numberOfTracks; c++)
+                      this.activeAudioSources[c].stop(a + 0.03);
+                    clearInterval(this.timerMonitorPosition);
+                  }),
+                  (a.prototype.startAudio = function (a, c) {
+                    var d = this,
+                      e = b.currentTime,
+                      f = (downwardRamp = 0.03);
+                    this.position = void 0 !== a ? a : this.position || 0;
+                    for (var g = 0; g < this.numberOfTracks; g++)
+                      (this.activeAudioSources[g] = null),
+                        (this.activeAudioSources[g] = b.createBufferSource()),
+                        (this.activeAudioSources[g].buffer = this.trackBuffer[g].buffer),
+                        this.activeAudioSources[g].connect(this.trackGainNode[g]),
+                        void 0 !== c
+                          ? (this.gainNodeMaster.gain.setValueAtTime(0, e + downwardRamp),
+                            this.gainNodeMaster.gain.linearRampToValueAtTime(
+                              1,
+                              e + downwardRamp + f
+                            ),
+                            this.activeAudioSources[g].start(
+                              e + downwardRamp,
+                              this.position + downwardRamp,
+                              f + c
+                            ),
+                            this.gainNodeMaster.gain.setValueAtTime(
+                              1,
+                              e + downwardRamp + f
+                            ),
+                            this.gainNodeMaster.gain.linearRampToValueAtTime(
+                              0,
+                              e + downwardRamp + f + c
+                            ))
+                          : (this.gainNodeMaster.gain.cancelScheduledValues(e),
+                            this.gainNodeMaster.gain.setValueAtTime(0, e),
+                            this.gainNodeMaster.gain.linearRampToValueAtTime(1, e + f),
+                            this.activeAudioSources[g].start(e, this.position));
+                    (this.startTime = e - (this.position || 0)),
+                      (this.timerMonitorPosition = setInterval(function () {
+                        d.monitorPosition(d);
+                      }, 16));
+                  }),
+                  (a.prototype.pause = function () {
+                    !0 === this.playing &&
+                      (this.stopAudio(),
+                        (this.position = b.currentTime - this.startTime),
+                        (this.playing = !1),
+                        this.updateMainControls());
+                  }),
+                  (a.prototype.other_instances = function () {
+                    return $(".jquery-trackswitch").not(this.element);
+                  }),
+                  (a.prototype.pause_others = function () {
+                    this.options.globalsolo &&
+                      this.other_instances().each(function () {
+                        $(this)
+                          .data("plugin_" + c)
+                          .pause();
+                      });
+                  }),
+                  (a.prototype.event_playpause = function (a) {
+                    return (
+                      (!this.valid_click(a) && 32 !== a.which) ||
+                      (a.preventDefault(),
+                        this.playing
+                          ? this.pause()
+                          : (this.startAudio(),
+                            this.pause_others(),
+                            (this.playing = !0),
+                            this.updateMainControls()),
+                        a.stopPropagation(),
+                        !1)
+                    );
+                  }),
+                  (a.prototype.event_stop = function (a) {
+                    if (!this.valid_click(a)) return !0;
+                    a.preventDefault();
+                    return (
+                      this.playing && this.stopAudio(),
+                      (this.position = 0),
+                      (this.playing = !1),
+                      this.updateMainControls(),
+                      a.stopPropagation(),
+                      !1
+                    );
+                  }),
+                  (a.prototype.event_repeat = function (a) {
+                    return (
+                      !this.valid_click(a) ||
+                      (a.preventDefault(),
+                        (this.repeat = !this.repeat),
+                        this.updateMainControls(),
+                        a.stopPropagation(),
+                        !1)
+                    );
+                  }),
+                  (a.prototype.seek = function (a) {
+                    if (a.type.indexOf("mouse") >= 0)
+                      var b = a.pageX - $(this.seekingElement).offset().left;
+                    else
+                      var b =
+                        a.originalEvent.touches[0].pageX -
+                        $(this.seekingElement).offset().left;
+                    var c = $(this.seekingElement).width();
+                    c = c < 1 ? 1 : c;
+                    var d = b < 0 ? 0 : b > c ? c : b,
+                      e = (d / c) * 100,
+                      f = this.longestDuration * (e / 100);
+                    b >= 0 && b <= c && this.playing
+                      ? (this.stopAudio(), this.startAudio(f, 0.03))
+                      : (this.position = f),
+                      this.updateMainControls();
+                  }),
+                  (a.prototype.event_seekStart = function (a) {
+                    return (
+                      !this.valid_click(a) ||
+                      (a.preventDefault(),
+                        (this.seekingElement = $(a.target).closest(".seekwrap")),
+                        this.seek(a),
+                        (this.currentlySeeking = !0),
+                        a.stopPropagation(),
+                        !1)
+                    );
+                  }),
+                  (a.prototype.event_seekMove = function (a) {
+                    if (this.currentlySeeking) return a.preventDefault(), this.seek(a), !1;
+                    a.stopPropagation();
+                  }),
+                  (a.prototype.event_seekEnd = function (a) {
+                    return (
+                      a.preventDefault(),
+                      this.currentlySeeking && this.playing && this.startAudio(),
+                      (this.currentlySeeking = !1),
+                      a.stopPropagation(),
+                      !1
+                    );
+                  }),
+                  (a.prototype._index_from_target = function (a) {
+                    return $(a).closest(".track").prevAll().length;
+                  }),
+                  (a.prototype.event_solo = function (a) {
+                    if (!this.valid_click(a)) return !0;
+                    var b = this._index_from_target(a.target),
+                      c = this,
+                      d = this.trackProperties[b].solo;
+                    (a.shiftKey || this.options.radiosolo) &&
+                      $.each(this.trackProperties, function (a, b) {
+                        c.trackProperties[a].solo = !1;
+                      }),
+                      (this.options.radiosolo || a.shiftKey) && d
+                        ? (this.trackProperties[b].solo = !0)
+                        : (this.trackProperties[b].solo = !d),
+                      this.apply_track_properties();
+                  }),
+                  (a.prototype.event_mute = function (a) {
+                    if (!this.valid_click(a)) return !0;
+                    a.preventDefault();
+                    var b = this._index_from_target(a.target);
+                    return (
+                      (this.trackProperties[b].mute = !this.trackProperties[b].mute),
+                      this.apply_track_properties(),
+                      a.stopPropagation(),
+                      !1
+                    );
+                  }),
+                  (a.prototype.switch_image = function () {
+                    var a,
+                      b = this,
+                      c = 0;
+                    $.each(this.trackProperties, function (d, e) {
+                      !0 === b.trackProperties[d].solo &&
+                        (c++, (a = b.element.find("ts-track")[d].dataset.img));
+                    }),
+                      (1 !== c || void 0 === a || a.length < 1) && (a = this.originalImage),
+                      this.element.find(".seekable").attr("src", a);
+                  }),
+                  (a.prototype.apply_track_properties = function () {
+                    var a = this,
+                      b = !1;
+                    $.each(this.trackProperties, function (c, d) {
+                      b = b || a.trackProperties[c].solo;
+                    }),
+                      $.each(this.trackProperties, function (c, d) {
+                        var e = a.element.find(
+                          ".track_list li.track:nth-child(" + (c + 1) + ")"
+                        );
+                        a.trackProperties[c].mute
+                          ? e.find(".mute").addClass("checked")
+                          : e.find(".mute").removeClass("checked"),
+                          a.trackProperties[c].solo
+                            ? e.find(".solo").addClass("checked")
+                            : e.find(".solo").removeClass("checked"),
+                          a.trackGainNode.length > 0 &&
+                          ((a.trackGainNode[c].gain.value = 1),
+                            a.trackProperties[c].mute
+                              ? (a.trackGainNode[c].gain.value = 0)
+                              : (a.trackGainNode[c].gain.value = 1),
+                            b &&
+                            (a.trackProperties[c].solo
+                              ? (a.trackGainNode[c].gain.value = 1)
+                              : (a.trackGainNode[c].gain.value = 0)));
+                      }),
+                      this.switch_image(),
+                      this.deselect();
+                  }),
+                  (a.prototype.deselect = function (a) {
+                    var b =
+                      "getSelection" in window
+                        ? window.getSelection()
+                        : "selection" in document
+                          ? document.selection
+                          : null;
+                    "removeAllRanges" in b
+                      ? b.removeAllRanges()
+                      : "empty" in b && b.empty();
+                  }),
+                  ($.fn[c] = function (b) {
+                    return this.each(function () {
+                      $(this).data("plugin_" + c) ||
+                        $(this).data("plugin_" + c, new a(this, b));
+                    });
+                  });
+              })();
+        
+          </script>
+
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            jQuery(".player").trackSwitch(); // All other players are default
+        });
+        var settings = {
+            onlyradiosolo: true,
+            repeat: false,
+        };
+        $(".player").trackSwitch(settings);
+    </script>
+    <script>
+
+    </script>
+</body>
+
+</html>
