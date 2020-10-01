@@ -5,11 +5,35 @@
   <title>JS Audio Player</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script src="https://cdn.rawgit.com/download/polymer-cdn/1.5.0/lib/webcomponentsjs/webcomponents-lite.min.js"></script>
+  <script
+    src="https://cdn.rawgit.com/download/polymer-cdn/1.5.0/lib/webcomponentsjs/webcomponents-lite.min.js"></script>
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
     integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous" />
 
   <style media="screen">
+    @font-face {
+      font-family: "AvenirNext-Regular";
+      src: url("https://ishishir10.github.io/beyourselfsound/fonts/AvenirNext-Regular.eot");
+      /* IE9 Compat Modes */
+      src: url("https://ishishir10.github.io/beyourselfsound/fonts/AvenirNext-Regular.eot?#iefix") format("embedded-opentype"),
+        /* IE6-IE8 */
+        url("https://ishishir10.github.io/beyourselfsound/fonts/AvenirNext-Regular.otf") format("opentype"),
+        /* Open Type Font */
+        url("https://ishishir10.github.io/beyourselfsound/fonts/AvenirNext-Regular.svg") format("svg"),
+        /* Legacy iOS */
+        url("https://ishishir10.github.io/beyourselfsound/fonts/AvenirNext-Regular.ttf") format("truetype"),
+        /* Safari, Android, iOS */
+        url("https://ishishir10.github.io/beyourselfsound/fonts/AvenirNext-Regular.woff") format("woff"),
+        /* Modern Browsers */
+        url("https://ishishir10.github.io/beyourselfsound/fonts/AvenirNext-Regular.woff2") format("woff2");
+      /* Modern Browsers */
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    body {
+      font-family: 'AvenirNext-Regular';
+    }
 
     .jquery-trackswitch a,
     .jquery-trackswitch abbr,
@@ -606,7 +630,7 @@
 
   <div id="player">
     <div class="player">
-      <img class="seekable" data-seek-margin-left="4" data-seek-margin-right="4"/>
+      <img class="seekable" data-seek-margin-left="4" data-seek-margin-right="4" />
       <ts-track title="BEFORE"
         data-img="https://static.wixstatic.com/media/2a5dd0_103ec4d4e9d04597a69f1ccd53260f25~mv2.png">
         <ts-source src="https://static.wixstatic.com/mp3/2a5dd0_18c680ff2ca44b1d97e9a22cbcc84b26.mp3" type="audio/mpeg">
