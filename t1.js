@@ -1,0 +1,1 @@
+jQuery(document).ready(function(){jQuery(".player").trackSwitch()});var settings={onlyradiosolo:!0,repeat:!1};$(".player").trackSwitch(settings);
